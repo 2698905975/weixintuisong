@@ -110,7 +110,7 @@ def get_ciba():
                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
     }
     r = get(url, headers=headers)
-    note_cn = r.json()["content"]
+    note_cn = r.json()["newslist"]
     return note_ch
  
  
