@@ -103,13 +103,16 @@ def get_birthday(birthday, year, today):
  
  
 def get_ciba():
-    conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
-    params = urllib.parse.urlencode({'key':'a3b7653593cd6b547e97aaa71fb49f61'})
-    headers = {'Content-type':'application/x-www-form-urlencoded'}
-    conn.request('POST','/zaoan/index',params,headers)
-    res = conn.getresponse()
-    data = res.read()
-    return data
+    url = "http://open.iciba.com/dsapi/"
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    }
+    r = get(url, headers=headers)
+    note_en = r.json()["content"]
+    note_ch = r.json()["note"]
+    return note_ch, note_en
  
  
 def send_message(to_user, access_token, region_name, weather, temp, wind_dir, note_ch, note_en):
@@ -219,11 +222,12 @@ if __name__ == "__main__":
     # 传入地区获取天气信息
     region = config["region"]
     weather, temp, wind_dir = get_weather(region)
-    data = config["data"]
-    if data == "":
+     note_ch = config["note_ch"]
+    note_en = config["note_en"]
+    if note_ch == "" and note_en == "":
         # 获取词霸每日金句
-        data = get_ciba()
+        note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir, data.decode('utf-8'))
+        send_message(user, accessToken, region, weather, temp, wind_dir, note_ch, note_en)
     os.system("pause")
