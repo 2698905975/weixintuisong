@@ -1,4 +1,4 @@
-name: weixin
+name: 宝宝
 on:
   workflow_dispatch:
   schedule: 
